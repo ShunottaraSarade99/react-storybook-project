@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import DateRangeCalendar from "./DateRangeCalendar";
 import './daterangecalendar.css'
-import { userEvent, within } from "@storybook/test";
+import { userEvent, within } from '@storybook/testing-library';
 
 const meta = {
   title: "Example/Date Range Calendar",
