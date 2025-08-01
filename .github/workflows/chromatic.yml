@@ -1,40 +1,36 @@
-name: Chromatic
+name: "Chromatic"
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
+# Event for the workflow
+# https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request
+on: push
+
+permissions:
+  contents: read
+  packages: read
 
 jobs:
-  chromatic:
+  chromatic-deployment:
     name: Run Chromatic
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # required to retrieve git history
 
-      - name: Setup Node.js
+      - name: Setup npm
         uses: actions/setup-node@v4
         with:
-          node-version: 22.17.0
-          cache: "npm"
+          node-version: 20
+          registry-url: "https://npm.pkg.github.com"
 
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+      - name: Install dependencies
+        run: npm clean-install
 
-      - name: Install dependencies (with legacy peer deps)
-        run: npm install --legacy-peer-deps
-
-      - name: Run Chromatic
-        uses: chromaui/action@latest
+      - name: publish to chromatic
+        uses: chromaui/action@v11
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          exitZeroOnChanges: true # 👈 Option to prevent the workflow from failing
+          onlyChanged: false # 👈 Disable TurboSnap, see MOSAIQ-3198
+        id: chromatic-publish
