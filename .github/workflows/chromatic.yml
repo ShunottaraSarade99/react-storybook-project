@@ -1,4 +1,4 @@
-name: Chromatic
+name: Chromatic Deployment
 
 on:
   push:
@@ -21,18 +21,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "npm"
+          cache: 'npm'
 
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+      - name: Downgrade npm to v9
+        run: npm install -g npm@9
 
       - name: Install dependencies (with legacy peer deps)
         run: npm install --legacy-peer-deps
+
+      - name: Build Storybook manually
+        run: npm run build-storybook
 
       - name: Run Chromatic
         uses: chromaui/action@latest
