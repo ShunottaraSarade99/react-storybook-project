@@ -1,39 +1,35 @@
-name: Chromatic Deployment
+name: "Chromatic"
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
+# Event for the workflow
+# https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request
+on: push
+
+permissions:
+  contents: read
+  packages: read
 
 jobs:
-  chromatic:
-    name: Run Chromatic
-    runs-on: ubuntu-latest
-
+  chromatic-deployment:
+    runs-on: [self-hosted, Linux, node]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # required to retrieve git history
 
-      - name: Setup Node.js
+      - name: Setup npm
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          registry-url: "https://npm.pkg.github.com"
 
-      - name: Downgrade npm to v9
-        run: npm install -g npm@9
+      - name: Install dependencies
+        run: npm clean-install
 
-      - name: Install dependencies (with legacy peer deps)
-        run: npm install --legacy-peer-deps
-
-      - name: Build Storybook manually
-        run: npm run build-storybook
-
-      - name: Run Chromatic
-        uses: chromaui/action@latest
+      - name: publish to chromatic
+        uses: chromaui/action@v11
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          buildScriptName: build-storybook
+          exitZeroOnChanges: true # 👈 Option to prevent the workflow from failing
+          onlyChanged: false # 👈 Disable TurboSnap, see MOSAIQ-3198
+        id: chromatic-publish
