@@ -13,6 +13,19 @@
     "chromatic": "chromatic --exit-zero-on-changes",
     "test-storybook": "storybook test"
   },
+   "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/nupano-components.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/nupano-components.cjs"
+      }
+    },
+    "./style": "./dist/style.css"
+  },
   "dependencies": {
     "@storybook/testing-library": "^0.2.1",
     "date-fns": "^4.1.0",
@@ -50,5 +63,8 @@
     "typescript-eslint": "^8.35.1",
     "vite": "^7.0.4",
     "vitest": "^3.2.4"
+  },
+  "engines": {
+    "node": "20.x"
   }
 }
