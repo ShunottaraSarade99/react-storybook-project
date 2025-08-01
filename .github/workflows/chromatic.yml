@@ -10,7 +10,8 @@ permissions:
 
 jobs:
   chromatic-deployment:
-    runs-on: [self-hosted, Linux, node]
+    name: Run Chromatic
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
