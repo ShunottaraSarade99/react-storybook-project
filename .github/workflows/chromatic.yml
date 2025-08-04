@@ -1,7 +1,5 @@
 name: "Chromatic"
 
-# Event for the workflow
-# https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request
 on: push
 
 permissions:
@@ -16,21 +14,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # required to retrieve git history
+          fetch-depth: 0
 
-      - name: Setup npm
+      - name: Use Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: "https://npm.pkg.github.com"
 
       - name: Install dependencies
-        run: npm clean-install
+        run: npm ci
 
-      - name: publish to chromatic
+      - name: Build Storybook
+        run: npm run build-storybook
+
+      - name: Publish to Chromatic
         uses: chromaui/action@latest
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          exitZeroOnChanges: true # 👈 Option to prevent the workflow from failing
-          onlyChanged: false # 👈 Disable TurboSnap, see MOSAIQ-3198
+          exitZeroOnChanges: true
+          onlyChanged: false
         id: chromatic-publish
