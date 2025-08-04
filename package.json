@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "node ./node_modules/@storybook/cli/bin/index.js build",
+    "build-storybook": "npx --yes @storybook/cli@9.1.0 build",
     "chromatic": "chromatic --exit-zero-on-changes",
     "test-storybook": "storybook test"
   },
