@@ -12,7 +12,7 @@ export interface DateRangeCalendarProps {
 const DateRangeCalendar = ({
   initialStartDate = new Date(),
   initialEndDate = new Date(),
-  rangeColor
+  rangeColor = '#000000'
 }: DateRangeCalendarProps) => {
   const [state, setState] = useState([
     {
@@ -35,8 +35,12 @@ const DateRangeCalendar = ({
   return (
     <DateRangePicker
       editableDateInputs={true}
-      onChange={(item) => {
-        setState([item.selection]);
+      onChange={({selection:item}) =>{
+        setState([{
+          startDate: item?.startDate ?? new Date(),
+          endDate: item?.endDate ?? new Date(),
+          key: "selection"
+        }])
       }}
       moveRangeOnFirstSelection={false}
       ranges={state}
