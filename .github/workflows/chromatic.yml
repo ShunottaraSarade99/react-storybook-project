@@ -24,12 +24,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Debug Storybook CLI
+        run: node_modules/.bin/storybook info
+        
+      - name: check storybook CLI
+        run: ls node_modules/.bin/storybook
+
       - name: Build Storybook
         run: npm run build-storybook
         
-      - name: Debug Storybook CLI
-        run: node_modules/.bin/storybook info
-
       - name: Publish to Chromatic
         uses: chromaui/action@latest
         with:
