@@ -28,7 +28,7 @@ jobs:
         run: npm clean-install
 
       - name: publish to chromatic
-        uses: chromaui/action@v11
+        uses: chromaui/action@latest
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           exitZeroOnChanges: true # 👈 Option to prevent the workflow from failing
